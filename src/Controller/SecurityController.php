@@ -3,14 +3,13 @@
 namespace App\Controller;
 
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
-use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Security\Http\Authentication\AuthenticationUtils;
 
 class SecurityController extends AbstractController
 {
-    #[Route("/login", name: "login")]
+    #[Route("/login", name: "app_login")]
     public function loginAction(AuthenticationUtils $authenticationUtils): Response
     {
         // get the login error if there is one
@@ -36,10 +35,12 @@ class SecurityController extends AbstractController
     }
 
     /**
-     * @Route("/logout", name="logout")
+     * @throws \Exception
      */
-    public function logoutCheck()
+    #[Route('/logout', name: 'app_logout')]
+    public function logout(): never
     {
-        // This code is never executed.
+        // controller can be blank: it will never be called!
+        throw new \Exception('Don\'t forget to activate logout in security.yaml');
     }
 }
