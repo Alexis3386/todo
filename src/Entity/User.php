@@ -2,11 +2,10 @@
 
 namespace App\Entity;
 
-use Doctrine\ORM\Mapping as ORM;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
-use Symfony\Component\Validator\Constraints as Assert;
-use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 
 /**
  * @ORM\Table("user")
@@ -20,6 +19,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
      * @ORM\Column(type="integer")
      * @ORM\Id
      * @ORM\GeneratedValue(strategy="AUTO")
+     * @noinspection PhpPropertyOnlyWrittenInspection
      */
     private int $id;
 
@@ -40,6 +40,20 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
      * @Assert\Email(message="Le format de l'adresse n'est pas correcte.")
      */
     private string $email;
+
+    /**
+     *
+     * @var Collection<int, Task>
+     * @ORM\OneToMany(targetEntity="Task", mappedBy="User")
+     */
+    private Collection $tasks;
+
+    // ...
+
+    public function __construct()
+    {
+        $this->tasks = new ArrayCollection();
+    }
 
     /**
      * @ORM\Column(type="json")
@@ -101,7 +115,6 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     public function setRoles(array $roles): self
     {
         $this->roles = $roles;
-
         return $this;
     }
 
@@ -112,5 +125,16 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     public function getUserIdentifier(): string
     {
         return (string)$this->username;
+    }
+
+    public function getTasks(): Collection
+    {
+        return $this->tasks;
+    }
+
+    public function setTasks(Collection $tasks): User
+    {
+        $this->tasks = $tasks;
+        return $this;
     }
 }

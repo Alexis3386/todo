@@ -19,6 +19,7 @@ class Task
      * @ORM\Column(type="integer")
      * @ORM\Id
      * @ORM\GeneratedValue(strategy="AUTO")
+     * @noinspection PhpPropertyOnlyWrittenInspection
      */
     private int $id;
 
@@ -43,6 +44,12 @@ class Task
      * @ORM\Column(type="boolean")
      */
     private bool $isDone;
+
+    /**
+     * @ORM\ManyToOne(targetEntity="User", inversedBy="tasks")
+     * @ORM\JoinColumn(referencedColumnName="id")
+     */
+    private User|null $user = null;
 
     public function __construct()
     {
@@ -106,4 +113,16 @@ class Task
 
         return $this;
     }
+
+    public function getUser(): ?User
+    {
+        return $this->user;
+    }
+
+    public function setUser(?User $user): Task
+    {
+        $this->user = $user;
+        return $this;
+    }
+
 }
