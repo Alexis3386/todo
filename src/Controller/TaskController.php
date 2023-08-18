@@ -11,9 +11,18 @@ use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\Security\Core\Security;
 
 class TaskController extends AbstractController
 {
+
+    private Security $security;
+
+    public function __construct(Security $security)
+    {
+        $this->security = $security;
+    }
+
     #[Route("/tasks", name: "task_list")]
     public function listAction(TaskRepository $repository): Response
     {
@@ -85,11 +94,16 @@ class TaskController extends AbstractController
     /**
      * @Route("/tasks/{id}/delete", name="task_delete")
      */
-    #[Route("/tasks/{id}/delete", name: "task_delete")]
-    public function deleteTaskAction(Task $task, EntityManagerInterface $em): RedirectResponse
+    #[Route("/tasks/{id}/delete", name: "task_delete", methods: ['post'])]
+    public function deleteTaskAction(Task $task, EntityManagerInterface $em, Request $request): RedirectResponse
     {
-        $em->remove($task);
-        $em->flush();
+        $this->denyAccessUnlessGranted('CAN_DELETE', $task);
+
+        $submittedToken = $request->request->get('token');
+        if ($this->isCsrfTokenValid('delete-task' . $task->getId(), $submittedToken)) {
+            $em->remove($task);
+            $em->flush();
+        }
 
         $this->addFlash('success', 'La tâche a bien été supprimée.');
         return $this->redirectToRoute('task_list');
