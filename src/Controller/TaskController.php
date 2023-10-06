@@ -30,9 +30,7 @@ class TaskController extends AbstractController
         return $this->render('task/list.html.twig', ['tasks' => $repository->findAll()]);
     }
 
-    /**
-     * @Route("/tasks/create", name="task_create")
-     */
+
     #[IsGranted('ROLE_USER')]
     #[Route("/tasks/create", name: "task_create")]
     public function createAction(Request $request, EntityManagerInterface $em): RedirectResponse|Response
@@ -78,13 +76,9 @@ class TaskController extends AbstractController
         ]);
     }
 
-    /**
-     * @Route("/tasks/{id}/toggle", name="task_toggle")
-     */
     #[Route("/tasks/{id}/toggle", name: "task_toggle")]
     public function toggleTaskAction(Task $task, EntityManagerInterface $em): RedirectResponse
     {
-
         $task->toggle(!$task->isDone());
         $em->flush();
 
@@ -93,9 +87,6 @@ class TaskController extends AbstractController
         return $this->redirectToRoute('task_list');
     }
 
-    /**
-     * @Route("/tasks/{id}/delete", name="task_delete")
-     */
     #[Route("/tasks/{id}/delete", name: "task_delete", methods: ['post'])]
     public function deleteTaskAction(Task $task, EntityManagerInterface $em, Request $request): RedirectResponse
     {

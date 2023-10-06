@@ -24,20 +24,25 @@ class RemoveTest extends AbstractAppWebTestCase
     public function testDeleteTaskWithUserAdmin(): void
     {
 
-        $client = $this->getLogedClient('Alexis');
+        $client = $this->getLogedClient('Alex');
 
         $crawler = $client->request('GET', '/tasks');
 
-//        $tasks = $this->getEntityManager()->createQuery('SELECT t
-//            FROM App\Entity\Task t
-//            WHERE user
-//            ')->getResult();
-//
-//        dd($tasks);
+        $userRepository = static::getContainer()->get(UserRepository::class);
+        $testUser = $userRepository->findOneBy(['username' => 'Alex']);
 
-        $button = $crawler->filter('#delete-' . '20')->text();
+        $numberOfTasksBeforeDelete = $this->numberOfTask($testUser);
 
-//        dd($button);
+        $tasks = $this->getEntityManager()->createQuery('SELECT t
+            FROM App\Entity\Task t
+            INNER JOIN t.user u
+            WHERE t.user = :user')
+            ->setParameter('user', $testUser)
+            ->getResult();
+
+        $id = $tasks[0]->getId();
+
+        $button = $crawler->filter('#delete-' . $id)->link();
 
         $this->client->click($button);
 
@@ -45,6 +50,31 @@ class RemoveTest extends AbstractAppWebTestCase
 
         self::assertGreaterThan($numberOfTasksAfterDelete, $numberOfTasksBeforeDelete);
 
+    }
+
+    /**
+     * @throws Exception
+     */
+    public function testDeleteTaskOfAnotheUser(): void
+    {
+        $client = $this->getLogedClient('Alex');
+
+        $crawler = $client->request('GET', '/tasks');
+
+        $userRepository = static::getContainer()->get(UserRepository::class);
+        $otherUser = $userRepository->findOneBy(['username' => 'Lucy']);
+
+        $tasks = $this->getEntityManager()->createQuery('SELECT t
+            FROM App\Entity\Task t
+            INNER JOIN t.user u
+            WHERE t.user = :user')
+            ->setParameter('user', $otherUser)
+            ->getResult();
+
+        $id = $tasks[0]->getId();
+
+        self::assertSelectorExists('#task-' . $id);
+        self::assertSelectorNotExists('#delete-' . $id);
     }
 
     /**

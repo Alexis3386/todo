@@ -2,13 +2,12 @@
 
 namespace App\Tests;
 
-use App\Entity\Task;
-use App\Entity\User;
 use App\Repository\UserRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Exception;
 use Symfony\Bundle\FrameworkBundle\KernelBrowser;
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
+
 
 abstract class AbstractAppWebTestCase extends WebTestCase
 {
