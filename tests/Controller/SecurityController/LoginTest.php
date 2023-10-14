@@ -2,7 +2,6 @@
 
 namespace App\Tests\Controller\SecurityController;
 
-use App\Repository\UserRepository;
 use App\Tests\AbstractAppWebTestCase;
 use Exception;
 use Symfony\Component\HttpFoundation\Response;
@@ -18,13 +17,12 @@ class LoginTest extends AbstractAppWebTestCase
     {
 
         $client = static::createClient();
-
         $crawler = $client->request('GET', '/login');
 
-        $userRepository = static::getContainer()->get(UserRepository::class);
-        $testUser = $userRepository->findOneBy(['username' => 'Alexis']);
-
-//        $client->loginUser($testUser);
+        $client->submitForm('Se connecter', [
+            '_username' => 'Alex',
+            '_password' => 'password'
+        ]);
 
         $crawler = $client->request('GET', '/');
 
@@ -41,8 +39,7 @@ class LoginTest extends AbstractAppWebTestCase
     public function testLogout(): void
     {
 
-        $client = $this->getLogedClient('Alexis');
-
+        $client = $this->getLogedClient('Alex');
         $crawler = $client->request('GET', '/');
 
         $link = $crawler->filter('a[href="/logout"]')->link();
@@ -52,5 +49,4 @@ class LoginTest extends AbstractAppWebTestCase
         self::assertSelectorExists('a[href="/login"]');
 
     }
-
 }

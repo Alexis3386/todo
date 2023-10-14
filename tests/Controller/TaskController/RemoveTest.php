@@ -28,25 +28,20 @@ class RemoveTest extends AbstractAppWebTestCase
 
         $crawler = $client->request('GET', '/tasks');
 
-        $userRepository = static::getContainer()->get(UserRepository::class);
-        $testUser = $userRepository->findOneBy(['username' => 'Alex']);
-
-        $numberOfTasksBeforeDelete = $this->numberOfTask($testUser);
+        $numberOfTasksBeforeDelete = $this->numberOfTask($this->logedUser);
 
         $tasks = $this->getEntityManager()->createQuery('SELECT t
             FROM App\Entity\Task t
             INNER JOIN t.user u
-            WHERE t.user = :user')
-            ->setParameter('user', $testUser)
-            ->getResult();
+            WHERE t.user = :user
+            ORDER BY t.createdAt DESC')
+            ->setParameter('user', $this->logedUser)
+            ->setMaxResults(1)
+            ->getSingleResult();
 
-        $id = $tasks[0]->getId();
+        $client->submitForm('delete-' . $tasks->getId());
 
-        $button = $crawler->filter('#delete-' . $id)->link();
-
-        $this->client->click($button);
-
-        $numberOfTasksAfterDelete = $this->numberOfTask($testUser);
+        $numberOfTasksAfterDelete = $this->numberOfTask($this->logedUser);
 
         self::assertGreaterThan($numberOfTasksAfterDelete, $numberOfTasksBeforeDelete);
 
@@ -80,29 +75,55 @@ class RemoveTest extends AbstractAppWebTestCase
     /**
      * @throws Exception
      */
-    public function testDeleteTaskWithUserNotAdmin(): void
+    public function testDeleteTaskOwnedWithUserNotAdmin(): void
     {
-        $crawler = static::createClient()->request('GET', '/login');
+        $client = $this->getLogedClient('Lucy');
 
         $userRepository = static::getContainer()->get(UserRepository::class);
-        $testUser = $userRepository->findOneBy(['username' => 'Alexy']);
+        $user = $userRepository->findOneBy(['username' => 'Lucy']);
 
-        $this->client->loginUser($testUser);
+        $crawler = $client->request('GET', '/tasks');
 
-        $numberOfTasksBeforeDelete = $this->numberOfTask($testUser);
+        $tasks = $this->getEntityManager()->createQuery('SELECT t
+            FROM App\Entity\Task t
+            INNER JOIN t.user u
+            WHERE t.user = :user')
+            ->setParameter('user', $user)
+            ->getResult();
 
-        $crawler = $this->client->request('GET', '/tasks');
+        $id = $tasks[0]->getId();
 
-        self::assertResponseStatusCodeSame(Response::HTTP_OK);
+        self::assertSelectorExists('#task-' . $id);
+        self::assertSelectorExists('#delete-' . $id);
 
-        $button = $crawler->selectButton('Supprimer')->first()->form();
+        $numberTasksBeforDelete = $this->numberOfTask($user);
+        $button = $crawler->filter('#delete-' . $id)->selectButton('Supprimer');
+        $client->submitForm('Supprimer');
 
-        $this->client->click($button);
+        $numberTasksAfterDelete = $this->numberOfTask($user);
+        self::assertGreaterThan($numberTasksAfterDelete, $numberTasksBeforDelete);
+    }
 
-        $numberOfTasksAfterDelete = $this->numberOfTask($testUser);
+    public function testDelete(): void
+    {
+        $crawler = $this->getLogedClient('Lucy');
 
-        self::assertGreaterThan($numberOfTasksAfterDelete, $numberOfTasksBeforeDelete);
+        $userRepository = static::getContainer()->get(UserRepository::class);
+        $user = $userRepository->findOneBy(['username' => 'Lucy']);
 
+        $crawler->request('GET', '/tasks');
+
+        $tasks = $this->getEntityManager()->createQuery('SELECT t
+            FROM App\Entity\Task t
+            INNER JOIN t.user u
+            WHERE t.user = :user')
+            ->setParameter('user', $user)
+            ->getResult();
+
+        $id = $tasks[0]->getId();
+
+        self::assertSelectorExists('#task-' . $id);
+        self::assertSelectorExists('#delete-' . $id);
     }
 
 
@@ -110,11 +131,11 @@ class RemoveTest extends AbstractAppWebTestCase
     {
 
         if ($user !== null) {
-            $tasks = $this->entityManager->getRepository(Task::class)->findBy(['user' => $user]);
+            $tasks = $this->getEntityManager()->getRepository(Task::class)->findBy(['user' => $user]);
             return count($tasks);
         }
 
-        $tasks = $this->entityManager->getRepository(Task::class)->findAll();
+        $tasks = $this->getEntityManager()->getRepository(Task::class)->findAll();
         return count($tasks);
     }
 

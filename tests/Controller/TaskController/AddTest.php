@@ -28,15 +28,9 @@ class AddTest extends AbstractAppWebTestCase
     public function testAddTaskWithUser(): void
     {
 
-        $client = static::createClient();
-        $crawler = $client->request('GET', '/login');
+        $client = $this->getLogedClient('Alex');
 
-        $userRepository = static::getContainer()->get(UserRepository::class);
-        $testUser = $userRepository->findOneBy(['username' => 'Alexis']);
-
-        $client->loginUser($testUser);
-
-        $numberofTAskBeforeAdd = $this->numberOfTask($testUser);
+        $numberofTAskBeforeAdd = $this->numberOfTask($this->logedUser);
 
         $crawler = $client->request('GET', '/tasks/create');
 
@@ -47,10 +41,9 @@ class AddTest extends AbstractAppWebTestCase
             'task[content]' => 'test'
         ]);
 
-        $numberofTAskAfterAdd = $this->numberOfTask($testUser);
+        $numberofTAskAfterAdd = $this->numberOfTask($this->logedUser);
 
         self::assertGreaterThan($numberofTAskBeforeAdd, $numberofTAskAfterAdd);
-
 
     }
 

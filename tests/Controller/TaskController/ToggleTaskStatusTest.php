@@ -30,28 +30,23 @@ class ToggleTaskStatusTest extends WebTestCase
      */
     public function testToggletaskStatus(): void
     {
+        $crawler = $this->client->request('GET', '/tasks');
+        $form = $crawler->filter('.btn.btn-success.btn-sm.pull-right')->form();
+        $buttonTextInit = $crawler->filter('.btn.btn-success.btn-sm.pull-right')->text();
+
+        $this->client->submit($form);
 
         $crawler = $this->client->request('GET', '/tasks');
-
-        self::assertResponseStatusCodeSame(Response::HTTP_OK);
-
+        $buttonText2 = $crawler->filter('.btn.btn-success.btn-sm.pull-right')->text();
         $form = $crawler->filter('.btn.btn-success.btn-sm.pull-right')->form();
-        $taskFormUri = $form->getUri();
 
+        $this->client->submit($form);
 
-        $taskId = (int)explode('/', $taskFormUri)[4];
+        $crawler = $this->client->request('GET', '/tasks');
+        $buttonText3 = $crawler->filter('.btn.btn-success.btn-sm.pull-right')->text();
 
-        $task = $this->entityManager->getRepository(Task::class)->findOneBy(['id' => $taskId]);
-
-        $statusBeforeToggle = $task->isDone();
-
-        $crawler = $this->client->submit($form);
-        $this->client->followRedirect();
-
-        $statusAfterToggle = $task->isDone();
-
-        self::assertNotSame($statusBeforeToggle, $statusAfterToggle);
-
+        self::assertNotSame($buttonTextInit, $buttonText2);
+        self::assertSame($buttonTextInit, $buttonText3);
     }
 
 }

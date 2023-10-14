@@ -25,10 +25,11 @@
                             </button>
                         </form>
                         {% if is_granted('CAN_DELETE', task) %}
-                            <form action="{{ path('task_delete', {'id' : task.id }) }}" method="post"
-                                  id="delete-{{ task.id }}">
+                            <form action="{{ path('task_delete', {'id' : task.id }) }}" method="post">
                                 <input type="hidden" name="token" value="{{ csrf_token('delete-task' ~ task.id) }}">
-                                <button class="btn btn-danger btn-sm pull-right">Supprimer</button>
+                                <button class="btn btn-danger btn-sm pull-right" id="delete-{{ task.id }}"
+                                        name="delete-{{ task.id }}">Supprimer
+                                </button>
                             </form>
                         {% endif %}
                     </div>
