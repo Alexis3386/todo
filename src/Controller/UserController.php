@@ -63,10 +63,7 @@ class UserController extends AbstractController
             $password = $userPasswordHasher->hashPassword($user, $user->getPassword());
             $user->setPassword($password);
 
-            try {
-                $em->flush();
-            } catch (OptimisticLockException|ORMException $e) {
-            }
+            $em->flush();
 
             $this->addFlash('success', "L'utilisateur a bien été modifié");
 

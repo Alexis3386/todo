@@ -13,7 +13,6 @@ use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 abstract class AbstractAppWebTestCase extends WebTestCase
 {
 
-
     protected ?User $logedUser = null;
 
     protected function setUp(): void

@@ -25,22 +25,4 @@ class SecurityController extends AbstractController
         ]);
     }
 
-
-    /**
-     * @Route("/login_check", name="login_check")
-     */
-    public function loginCheck()
-    {
-        // This code is never executed.
-    }
-
-    /**
-     * @throws \Exception
-     */
-    #[Route('/logout', name: 'app_logout')]
-    public function logout(): never
-    {
-        // controller can be blank: it will never be called!
-        throw new \Exception('Don\'t forget to activate logout in security.yaml');
-    }
 }

@@ -11,33 +11,67 @@ class EditTest extends AbstractAppWebTestCase
     /**
      * @throws Exception
      */
-    public function testCreateAction()
+    public function testEditAction(): void
     {
         $client = $this->getLogedClient('Alex');
 
         /** @var User $user */
-        $user = $this->getEntityManager()->getRepository(User::class)->findBy(['username' => 'Ryan']);
+        $user = $this->getEntityManager()->getRepository(User::class)->findOneBy(['username' => 'Sophie']);
+        $emailBeforeEdit = $user->getEmail();
 
-        $crawler = $client->request('GET', '/users/' . $user->getId() . 'create');
+        $crawler = $client->request('GET', '/users/' . $user->getId() . '/edit');
 
         $form = $crawler->selectButton('Modifier')->form();
-
         $form->setValues(
             [
-                'user[username]' => 'Ryan',
+                'user[username]' => 'Sophie',
                 'user[password][first]' => 'password',
                 'user[password][second]' => 'password',
-                'user[email]' => 'test@exemple.com',
+                'user[email]' => 'sophie@test23.com',
             ]);
-
         $form['user[roles]']->select('ROLE_USER');
 
         $client->submit($form);
-
         $client->followRedirect();
+        $crawler = $client->request('GET', '/users');
 
-        $user = $this->getEntityManager()->getRepository(User::class)->findBy(['username' => 'Ryan']);
+        $emailAfterEdit = $crawler->filter('tr#' . $user->getId() . ' .email')->text();
 
-        self::assertNotNull($user);
+        self::assertNotSame($emailAfterEdit, $emailBeforeEdit);
+
     }
+
+    /**
+     * @throws Exception
+     */
+    public function testEditWithSameEmail(): void
+    {
+        $client = $this->getLogedClient('Alex');
+
+        /** @var User $user */
+        $user = $this->getEntityManager()->getRepository(User::class)->findOneBy(['username' => 'Sophie']);
+        $nameBeforeEdit = $user->getUsername();
+
+        $crawler = $client->request('GET', '/users/' . $user->getId() . '/edit');
+
+        $form = $crawler->selectButton('Modifier')->form();
+        $form->setValues(
+            [
+                'user[username]' => 'SophieTest',
+                'user[password][first]' => 'password',
+                'user[password][second]' => 'password',
+                'user[email]' => 'sophie@test23.com',
+            ]);
+        $form['user[roles]']->select('ROLE_USER');
+
+        $client->submit($form);
+        $client->followRedirect();
+        $crawler = $client->request('GET', '/users');
+
+        $nameAfterEdit = $crawler->filter('tr#' . $user->getId() . ' .email')->text();
+
+        self::assertNotSame($nameBeforeEdit, $nameAfterEdit);
+
+    }
+
 }

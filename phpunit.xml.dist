@@ -29,7 +29,7 @@
         </include>
         <exclude>
             <directory suffix=".php">src/Entity</directory>
-            <directory suffix=".php">src/DataFixture</directory>
+            <directory suffix=".php">src/DataFixtures</directory>
         </exclude>
     </coverage>
 
