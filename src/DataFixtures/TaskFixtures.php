@@ -9,7 +9,6 @@ use Doctrine\Common\DataFixtures\DependentFixtureInterface;
 use Doctrine\Persistence\ObjectManager;
 use Faker\Factory;
 use Faker\Generator;
-
 class TaskFixtures extends Fixture implements DependentFixtureInterface
 {
 
@@ -50,7 +49,6 @@ class TaskFixtures extends Fixture implements DependentFixtureInterface
         $manager->flush();
 
     }
-
     public function getDependencies(): array
     {
         return [
