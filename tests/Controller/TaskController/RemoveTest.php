@@ -14,10 +14,6 @@ use Symfony\Component\HttpFoundation\Response;
 class RemoveTest extends AbstractAppWebTestCase
 {
 
-    private KernelBrowser|null $client = null;
-    private ObjectManager|null $entityManager = null;
-
-
     /**
      * @throws Exception
      */
@@ -26,7 +22,7 @@ class RemoveTest extends AbstractAppWebTestCase
 
         $client = $this->getLogedClient('Alex');
 
-        $crawler = $client->request('GET', '/tasks');
+        $client->request('GET', '/tasks');
 
         $numberOfTasksBeforeDelete = $this->numberOfTask($this->logedUser);
 
@@ -54,10 +50,10 @@ class RemoveTest extends AbstractAppWebTestCase
     {
         $client = $this->getLogedClient('Alex');
 
-        $crawler = $client->request('GET', '/tasks');
+        $client->request('GET', '/tasks');
 
         $userRepository = static::getContainer()->get(UserRepository::class);
-        $otherUser = $userRepository->findOneBy(['username' => 'Lucy']);
+        $otherUser = $userRepository->findOneBy(['username' => 'Luc']);
 
         $tasks = $this->getEntityManager()->createQuery('SELECT t
             FROM App\Entity\Task t
@@ -77,10 +73,10 @@ class RemoveTest extends AbstractAppWebTestCase
      */
     public function testDeleteTaskOwnedWithUserNotAdmin(): void
     {
-        $client = $this->getLogedClient('Lucy');
+        $client = $this->getLogedClient('Luc');
 
         $userRepository = static::getContainer()->get(UserRepository::class);
-        $user = $userRepository->findOneBy(['username' => 'Lucy']);
+        $user = $userRepository->findOneBy(['username' => 'Luc']);
 
         $crawler = $client->request('GET', '/tasks');
 
@@ -97,19 +93,22 @@ class RemoveTest extends AbstractAppWebTestCase
         self::assertSelectorExists('#delete-' . $id);
 
         $numberTasksBeforDelete = $this->numberOfTask($user);
-        $button = $crawler->filter('#delete-' . $id)->selectButton('Supprimer');
+        $crawler->filter('#delete-' . $id)->selectButton('Supprimer');
         $client->submitForm('Supprimer');
 
         $numberTasksAfterDelete = $this->numberOfTask($user);
         self::assertGreaterThan($numberTasksAfterDelete, $numberTasksBeforDelete);
     }
 
+    /**
+     * @throws Exception
+     */
     public function testDelete(): void
     {
-        $crawler = $this->getLogedClient('Lucy');
+        $crawler = $this->getLogedClient('Luc');
 
         $userRepository = static::getContainer()->get(UserRepository::class);
-        $user = $userRepository->findOneBy(['username' => 'Lucy']);
+        $user = $userRepository->findOneBy(['username' => 'Luc']);
 
         $crawler->request('GET', '/tasks');
 

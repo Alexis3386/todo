@@ -16,7 +16,7 @@ class AddTest extends AbstractAppWebTestCase
 
         $client = static::createClient();
 
-        $crawler = $client->request('GET', '/tasks/create');
+        $client->request('GET', '/tasks/create');
 
         self::assertResponseRedirects('http://localhost/login');
 
@@ -32,7 +32,7 @@ class AddTest extends AbstractAppWebTestCase
 
         $numberofTAskBeforeAdd = $this->numberOfTask($this->logedUser);
 
-        $crawler = $client->request('GET', '/tasks/create');
+        $client->request('GET', '/tasks/create');
 
         self::assertResponseStatusCodeSame(Response::HTTP_OK);
 

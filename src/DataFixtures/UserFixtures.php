@@ -25,7 +25,7 @@ class UserFixtures extends Fixture
         $user = new User();
         $user->setRoles(['ROLE_ADMIN']);
         $user->setPassword($this->userPasswordHasherInterface->hashPassword($user, 'password'));
-        $user->setUsername('Alexis');
+        $user->setUsername('Alex');
         $user->setEmail('test@exemple.com');
         $manager->persist($user);
 
@@ -33,7 +33,7 @@ class UserFixtures extends Fixture
             $user = new User();
             $user->setRoles(['ROLE_USER']);
             $user->setPassword($this->userPasswordHasherInterface->hashPassword($user, 'password'));
-            $user->setUsername($this->faker->name());
+            $user->setUsername($this->faker->firstName());
             $user->setEmail($this->faker->email());
             $manager->persist($user);
         }

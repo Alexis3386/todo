@@ -20,7 +20,7 @@ class EditTest extends AbstractAppWebTestCase
 
         $id = $tasks[0]['id'];
 
-        $crawler = $client->request('GET', '/tasks/' . $id . '/edit');
+        $client->request('GET', '/tasks/' . $id . '/edit');
 
         $client->submitForm('Modifier', [
             'task[title]' => 'set by test',
