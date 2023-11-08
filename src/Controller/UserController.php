@@ -36,7 +36,7 @@ class UserController extends AbstractController
 
         if ($form->isSubmitted() && $form->isValid()) {
             $password = $userPasswordHasher->hashPassword($user, $user->getPassword());
-            $roles = $form->get("roles")->getData();
+            $roles = [$form->get("roles")->getData()];
             $user->setRoles($roles);
             $user->setPassword($password);
             $em->persist($user);
@@ -53,7 +53,9 @@ class UserController extends AbstractController
     /**
      * @Route("/users/{id}/edit", name="user_edit")
      */
-    public function editAction(User $user, Request $request, EntityManagerInterface $em, UserPasswordHasherInterface $userPasswordHasher): Response
+    public function editAction(User                        $user, Request $request,
+                               EntityManagerInterface      $em,
+                               UserPasswordHasherInterface $userPasswordHasher): Response
     {
         $form = $this->createForm(UserType::class, $user);
 
@@ -63,10 +65,7 @@ class UserController extends AbstractController
             $password = $userPasswordHasher->hashPassword($user, $user->getPassword());
             $user->setPassword($password);
 
-            try {
-                $em->flush();
-            } catch (OptimisticLockException|ORMException $e) {
-            }
+            $em->flush();
 
             $this->addFlash('success', "L'utilisateur a bien été modifié");
 
