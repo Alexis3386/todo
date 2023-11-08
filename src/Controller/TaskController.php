@@ -17,13 +17,6 @@ use Symfony\Component\Security\Core\Security;
 class TaskController extends AbstractController
 {
 
-    private Security $security;
-
-    public function __construct(Security $security)
-    {
-        $this->security = $security;
-    }
-
     #[Route("/tasks", name: "task_list")]
     public function listAction(TaskRepository $repository): Response
     {
@@ -41,7 +34,6 @@ class TaskController extends AbstractController
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-
             $task->setUser($user);
             $em->persist($task);
             $em->flush();

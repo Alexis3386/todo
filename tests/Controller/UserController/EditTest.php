@@ -16,7 +16,7 @@ class EditTest extends AbstractAppWebTestCase
         $client = $this->getLogedClient('Alex');
 
         /** @var User $user */
-        $user = $this->getEntityManager()->getRepository(User::class)->findOneBy(['username' => 'Sophie']);
+        $user = $this->getEntityManager()->getRepository(User::class)->findOneBy(['username' => 'Marcel']);
         $emailBeforeEdit = $user->getEmail();
 
         $crawler = $client->request('GET', '/users/' . $user->getId() . '/edit');
@@ -49,7 +49,7 @@ class EditTest extends AbstractAppWebTestCase
         $client = $this->getLogedClient('Alex');
 
         /** @var User $user */
-        $user = $this->getEntityManager()->getRepository(User::class)->findOneBy(['username' => 'Sophie']);
+        $user = $this->getEntityManager()->getRepository(User::class)->findOneBy(['username' => 'Marcel']);
         $nameBeforeEdit = $user->getUsername();
 
         $crawler = $client->request('GET', '/users/' . $user->getId() . '/edit');
