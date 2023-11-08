@@ -11,7 +11,6 @@ use Symfony\Component\Validator\Constraints as Assert;
  * @ORM\Table
  *
  * @ORM\Entity(repositoryClass="App\Repository\TaskRepository")
- *
  */
 class Task
 {
@@ -19,7 +18,7 @@ class Task
      * @ORM\Column(type="integer")
      * @ORM\Id
      * @ORM\GeneratedValue(strategy="AUTO")
-     * @noinspection PhpPropertyOnlyWrittenInspection
+     * @noinspection                        PhpPropertyOnlyWrittenInspection
      */
     private int $id;
 
@@ -46,7 +45,7 @@ class Task
     private bool $isDone;
 
     /**
-     * @ORM\ManyToOne(targetEntity="User", inversedBy="tasks")
+     * @ORM\ManyToOne(targetEntity="User",        inversedBy="tasks")
      * @ORM\JoinColumn(referencedColumnName="id")
      */
     private User|null $user = null;

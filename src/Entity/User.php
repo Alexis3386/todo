@@ -22,12 +22,12 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
      * @ORM\Column(type="integer")
      * @ORM\Id
      * @ORM\GeneratedValue(strategy="AUTO")
-     * @noinspection PhpPropertyOnlyWrittenInspection
+     * @noinspection                        PhpPropertyOnlyWrittenInspection
      */
     private int $id;
 
     /**
-     * @ORM\Column(type="string", length=25, unique=true)
+     * @ORM\Column(type="string",     length=25, unique=true)
      * @Assert\NotBlank(message="Vous devez saisir un nom d'utilisateur.")
      */
     private string $username;
@@ -38,15 +38,15 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     private string $password;
 
     /**
-     * @ORM\Column(type="string", length=60, unique=true)
+     * @ORM\Column(type="string",     length=60, unique=true)
      * @Assert\NotBlank(message="Vous devez saisir une adresse email.")
-     * @Assert\Email(message="Le format de l'adresse n'est pas correcte.")
+     * @Assert\Email(message="Le      format de l'adresse n'est pas correcte.")
      */
     private string $email;
 
     /**
      *
-     * @var Collection<int, Task>
+     * @var                                Collection<int, Task>
      * @ORM\OneToMany(targetEntity="Task", mappedBy="user")
      */
     private Collection $tasks;
