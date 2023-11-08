@@ -11,8 +11,6 @@ use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 
 class UserFixtures extends Fixture
 {
-
-
     private Generator $faker;
 
     public function __construct(private readonly UserPasswordHasherInterface $userPasswordHasherInterface)

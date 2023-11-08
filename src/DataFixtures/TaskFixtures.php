@@ -3,7 +3,6 @@
 namespace App\DataFixtures;
 
 use App\Entity\Task;
-use App\Entity\User;
 use App\Repository\UserRepository;
 use Doctrine\Bundle\FixturesBundle\Fixture;
 use Doctrine\Common\DataFixtures\DependentFixtureInterface;
