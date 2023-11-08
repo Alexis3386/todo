@@ -15,7 +15,7 @@ class DefaultControllerTest extends WebTestCase
         $client = static::createClient();
 
         // Request a specific page
-        $crawler = $client->request('GET', '/');
+        $client->request('GET', '/');
 
         self::assertResponseIsSuccessful();
 

@@ -12,20 +12,6 @@ use Symfony\Component\HttpFoundation\Response;
 class ToggleTaskStatusTest extends AbstractAppWebTestCase
 {
 
-    private KernelBrowser|null $client = null;
-    private ObjectManager|null $entityManager = null;
-
-//    public function setUp(): void
-//
-//    {
-//        $this->client = static::createClient();
-//        $kernel = self::bootKernel();
-//
-//        $this->entityManager = $kernel->getContainer()
-//            ->get('doctrine')
-//            ->getManager();
-//    }
-
     /**
      * @throws \Exception
      */

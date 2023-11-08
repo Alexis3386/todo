@@ -17,14 +17,14 @@ class LoginTest extends AbstractAppWebTestCase
     {
 
         $client = static::createClient();
-        $crawler = $client->request('GET', '/login');
+        $client->request('GET', '/login');
 
         $client->submitForm('Se connecter', [
             '_username' => 'Alex',
             '_password' => 'password'
         ]);
 
-        $crawler = $client->request('GET', '/');
+        $client->request('GET', '/');
 
         self::assertResponseStatusCodeSame(Response::HTTP_OK);
         self::assertSelectorExists('a[href="/logout"]');
