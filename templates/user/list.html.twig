@@ -25,7 +25,7 @@
                 {% for user in users %}
                     <tr id="{{ user.id }}">
                         <th scope="row">{{ loop.index }}</th>
-                        <td>{{ user.username }}</td>
+                        <td class="name">{{ user.username }}</td>
                         <td class="email">{{ user.email }}</td>
                         <td>
                             <a href="{{ path('user_edit', {'id' : user.id}) }}" class="btn btn-success btn-sm">Edit</a>

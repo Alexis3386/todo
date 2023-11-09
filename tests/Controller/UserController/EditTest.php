@@ -11,12 +11,12 @@ class EditTest extends AbstractAppWebTestCase
     /**
      * @throws Exception
      */
-    public function testEditAction(): void
+    public function testEditEmailAction(): void
     {
         $client = $this->getLogedClient('Alex');
 
         /** @var User $user */
-        $user = $this->getEntityManager()->getRepository(User::class)->findOneBy(['username' => 'Marcel']);
+        $user = $this->getEntityManager()->getRepository(User::class)->findOneBy(['username' => 'Luc']);
         $emailBeforeEdit = $user->getEmail();
 
         $crawler = $client->request('GET', '/users/' . $user->getId() . '/edit');
@@ -24,7 +24,7 @@ class EditTest extends AbstractAppWebTestCase
         $form = $crawler->selectButton('Modifier')->form();
         $form->setValues(
             [
-                'user[username]' => 'Sophie',
+                'user[username]' => 'Luc',
                 'user[password][first]' => 'password',
                 'user[password][second]' => 'password',
                 'user[email]' => 'sophie@test23.com',
@@ -44,7 +44,7 @@ class EditTest extends AbstractAppWebTestCase
     /**
      * @throws Exception
      */
-    public function testEditWithSameEmail(): void
+    public function testEditName(): void
     {
         $client = $this->getLogedClient('Alex');
 
@@ -57,10 +57,10 @@ class EditTest extends AbstractAppWebTestCase
         $form = $crawler->selectButton('Modifier')->form();
         $form->setValues(
             [
-                'user[username]' => 'SophieTest',
+                'user[username]' => 'MarcelTest',
                 'user[password][first]' => 'password',
                 'user[password][second]' => 'password',
-                'user[email]' => 'sophie@test23.com',
+                'user[email]' => 'stephanie71@tele2.fr',
             ]);
         $form['user[roles]']->select('ROLE_USER');
 
@@ -68,7 +68,7 @@ class EditTest extends AbstractAppWebTestCase
         $client->followRedirect();
         $crawler = $client->request('GET', '/users');
 
-        $nameAfterEdit = $crawler->filter('tr#' . $user->getId() . ' .email')->text();
+        $nameAfterEdit = $crawler->filter('tr#' . $user->getId() . ' .name')->text();
 
         self::assertNotSame($nameBeforeEdit, $nameAfterEdit);
 

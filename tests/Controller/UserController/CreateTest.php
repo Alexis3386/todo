@@ -26,7 +26,7 @@ class CreateTest extends AbstractAppWebTestCase
                 'user[username]' => 'Ryan',
                 'user[password][first]' => 'password',
                 'user[password][second]' => 'password',
-                'user[email]' => 'test@exemple.com',
+                'user[email]' => 'test@create.com',
             ]);
 
         $form['user[roles]']->select('ROLE_USER');
