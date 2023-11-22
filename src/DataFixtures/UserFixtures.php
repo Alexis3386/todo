@@ -13,7 +13,7 @@ class UserFixtures extends Fixture
 {
     private Generator $faker;
 
-    public function __construct(private readonly UserPasswordHasherInterface $userPasswordHasherInterface)
+    public function __construct(private readonly UserPasswordHasherInterface $userPasswordHasher)
     {
         $this->faker = Factory::create('fr_FR');
         $this->faker->seed(157);
@@ -24,7 +24,7 @@ class UserFixtures extends Fixture
     {
         $user = new User();
         $user->setRoles(['ROLE_ADMIN']);
-        $user->setPassword($this->userPasswordHasherInterface->hashPassword($user, 'password'));
+        $user->setPassword($this->userPasswordHasher->hashPassword($user, 'password'));
         $user->setUsername('Alex');
         $user->setEmail('test@exemple.com');
         $manager->persist($user);
@@ -32,7 +32,7 @@ class UserFixtures extends Fixture
         for ($i = 0; $i < 5; $i++) {
             $user = new User();
             $user->setRoles(['ROLE_USER']);
-            $user->setPassword($this->userPasswordHasherInterface->hashPassword($user, 'password'));
+            $user->setPassword($this->userPasswordHasher->hashPassword($user, 'password'));
             $user->setUsername($this->faker->firstName());
             $user->setEmail($this->faker->email());
             $manager->persist($user);
